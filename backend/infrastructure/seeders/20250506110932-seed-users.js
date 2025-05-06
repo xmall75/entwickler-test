@@ -6,18 +6,18 @@ module.exports = {
   async up(queryInterface) {
     const users = [
       {
-        username: 'johndoe',
-        full_name: 'John Doe',
-        email: 'john.doe@example.com',
-        role: 'borrower',
-        password: 'password123',
+        name: 'Admin',
+        email: 'admin@revanantyo.com',
+        username: 'admin',
+        password: 'admin',
+        role_pkid: 1,
       },
       {
-        username: 'janedoe',
-        full_name: 'Jane Doe',
-        email: 'jane.doe@example.com',
-        role: 'staff',
-        password: 'password123',
+        name: 'Pegawai 1',
+        email: 'pegawai@revanantyo.com',
+        username: 'pegawai',
+        password: 'pegawai',
+        role_pkid: 2,
       },
     ];
 
