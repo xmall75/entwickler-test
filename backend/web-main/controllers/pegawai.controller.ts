@@ -127,7 +127,6 @@ export class PegawaiController extends BaseController {
         req.body,
       );
 
-      console.log(req);
       return this.sendSuccessUpdate(req, res, updateResult);
     } catch (error) {
       return this.handleError(req, res, error, 500);
@@ -146,6 +145,24 @@ export class PegawaiController extends BaseController {
         return this.sendErrorBadRequest(req, res);
       }
       await this.pegawaiService.softDelete(req, pkid);
+
+      return this.sendSuccessSoftDelete(req, res);
+    } catch (error) {
+      return this.handleError(req, res, error, 500);
+    }
+  }
+
+  public async hardDeletePegawai(
+    req: Request,
+    res: Response,
+  ): Promise<Response> {
+    try {
+      const pkid = parseInt(req.params.pkid);
+      if (isNaN(pkid)) {
+        return this.sendErrorBadRequest(req, res);
+      }
+
+      await this.pegawaiService.hardDelete(req, pkid);
 
       return this.sendSuccessHardDelete(req, res);
     } catch (error) {

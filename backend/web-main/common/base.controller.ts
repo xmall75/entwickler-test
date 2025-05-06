@@ -88,7 +88,7 @@ export abstract class BaseController {
       data: null,
       message,
       isSuccess: true,
-      status: 204, // HTTP status code for OK
+      status: 200, // HTTP status code for OK
     };
     return this.sendSuccess(res, vm);
   }

@@ -45,9 +45,9 @@ router.put(
 
 //region Delete & Restore methods
 router.delete(
-  '/soft/:pkid',
+  '/delete/:pkid',
   // (req, res, next) => middleware(req, res, next),
-  (req, res) => pegawaiController.softDeletePegawai(req, res),
+  (req, res) => pegawaiController.hardDeletePegawai(req, res),
 );
 router.put(
   '/restore/:pkid',
