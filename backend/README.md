@@ -24,7 +24,7 @@
 
 ## Overview
 
-This Backend System Template is designed to provide a foundational structure for enterprise backend systems like Enterprise Resource Planning (ERP), Supply Chain Management (SCM), Customer Relationship Management (CRM), and Customer Service Management (CSM). It offers a modular architecture to facilitate the rapid development of backend services and ensure seamless integration with other enterprise systems.
+Backend System for Developer Test by Revanantyo Dwigantara.
 
 ## Prerequisites
 
@@ -92,15 +92,11 @@ The API is documented to make it easy for developers to understand and utilize.
 
 A Postman collection is available to assist with API testing:
 
-- [Postman API Documentation](https://documenter.getpostman.com/view/30703660/2s9Yyzcxb2)
-
-### Swagger Documentation (Upcoming)
-
-Swagger documentation is being developed to provide an interactive UI for exploring and testing the API.
+- [Postman API Documentation](https://documenter.getpostman.com/view/27920384/2sB2j7cUzh)
 
 ## Getting Started
 
-To run the Account Payable system, follow these steps:
+To run the system, follow these steps:
 
 1. Install dependencies:
 
@@ -196,4 +192,4 @@ npm install
 
 ## License
 
-Distributed under the MIT License. See LICENSE for more information. Develop with ❤️ by [Kurniacf](https://github.com/kurniacf)
+Distributed under the MIT License. See LICENSE for more information. Backend Template Develop with ❤️ by [Kurniacf](https://github.com/kurniacf)
