@@ -3,6 +3,9 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import db from '../infrastructure/models';
 import pegawaiRouter from './routers/pegawai.router';
+import jabatanRouter from './routers/jabatan.router';
+import unitKerjaRouter from './routers/unitKerja.router';
+import tempatTugasRouter from './routers/tempatTugas.router';
 
 dotenv.config();
 
@@ -23,6 +26,9 @@ db.sequelize
 
 // Define routes
 app.use('/api/pegawai', pegawaiRouter);
+app.use('/api/jabatan', jabatanRouter);
+app.use('/api/unit-kerja', unitKerjaRouter);
+app.use('/api/tempat-tugas', tempatTugasRouter);
 
 // Set the port
 const PORT = process.env.PORT;

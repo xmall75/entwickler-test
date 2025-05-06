@@ -14,7 +14,7 @@ module.exports = {
       { nama_unit: 'Hukum' },
       { nama_unit: 'Pengembangan Bisnis' },
       { nama_unit: 'Pelayanan Pelanggan' },
-      { nama_unit: 'Manajemen Risiko' }
+      { nama_unit: 'Manajemen Risiko' },
     ];
 
     const unitKerjaRecords = unit_kerja.map((item) =>

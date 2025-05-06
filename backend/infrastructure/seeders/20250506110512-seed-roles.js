@@ -9,9 +9,7 @@ module.exports = {
       { role: 'pegawai', pegawai_permission: 'r' },
     ];
 
-    const rolesRecords = roles.map((item) =>
-      baseSeeder.createRecord(item),
-    );
+    const rolesRecords = roles.map((item) => baseSeeder.createRecord(item));
 
     await queryInterface.bulkInsert('roles', rolesRecords, {});
   },

@@ -11,7 +11,7 @@ module.exports = {
         tempat_lahir: 'Banjarnegara',
         tanggal_lahir: new Date('15 May 1968'),
         alamat: 'Jl. Melon No.16 Dian Asri',
-        golongan:  'IV/e',
+        golongan: 'IV/e',
         eselon: 'I',
         no_hp: '081234567890',
         jenis_kelamin: 'L',
@@ -324,7 +324,7 @@ module.exports = {
         jabatan_pkid: 7,
         unit_kerja_pkid: 8,
         tempat_tugas_pkid: 9,
-      }
+      },
     ];
 
     const pegawaiRecords = pegawai.map((item) => baseSeeder.createRecord(item));
