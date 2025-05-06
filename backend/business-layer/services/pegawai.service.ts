@@ -3,7 +3,6 @@ import { Request } from 'express';
 import { BaseService } from '../common/base.service';
 
 import { Model, WhereOptions } from 'sequelize';
-// import {getSalesOrderByCode} from '../../data-access/integrations/sales.integration';
 import { formatMessage, getMessage } from '../../helpers/messages/messagesUtil';
 import { MessagesKey } from '../../helpers/messages/messagesKey';
 import { PegawaiAttributes } from '../../infrastructure/models/pegawai.model';
