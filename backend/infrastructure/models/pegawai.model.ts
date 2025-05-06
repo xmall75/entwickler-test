@@ -8,6 +8,7 @@ export interface PegawaiAttributes {
   tempat_lahir: string;
   tanggal_lahir: Date;
   alamat: string;
+  golongan: string;
   eselon: string;
   no_hp: string;
   npwp: string;
@@ -26,6 +27,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     tempat_lahir!: string;
     tanggal_lahir!: Date;
     alamat!: string;
+    golongan!: string;
     eselon!: string;
     no_hp!: string;
     npwp!: string;
@@ -78,6 +80,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
       },
       alamat: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      golongan: {
         type: DataTypes.STRING,
         allowNull: false,
       },

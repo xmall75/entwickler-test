@@ -37,6 +37,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      golongan: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       eselon: {
         type: DataTypes.STRING,
         allowNull: false,
