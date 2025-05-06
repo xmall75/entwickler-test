@@ -1,4 +1,5 @@
 import LoginForm from '@/components/LoginForm';
+import QueryClientComponent from '@/components/QueryClient';
 import { Flex } from 'antd';
 
 export default function Home() {
@@ -10,7 +11,9 @@ export default function Home() {
         height: '100vh',
       }}
     >
-      <LoginForm />
+      <QueryClientComponent>
+        <LoginForm />
+      </QueryClientComponent>
     </Flex>
   );
 }
