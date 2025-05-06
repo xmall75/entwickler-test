@@ -1,9 +1,8 @@
-import { JabatanProperty } from "./jabatan";
-import { TempatTugasProperty } from "./tempat_tugas";
-import { UnitKerjaProperty } from "./unit_kerja";
+import { JabatanProperty } from './jabatan';
+import { TempatTugasProperty } from './tempat_tugas';
+import { UnitKerjaProperty } from './unit_kerja';
 
-export interface PegawaiProperty {
-  pkid: number;
+export interface PegawaiInputProperty {
   nip: string;
   foto: string | null;
   nama_lengkap: string;
@@ -21,7 +20,8 @@ export interface PegawaiProperty {
   tempat_tugas_pkid: number;
 }
 
-export interface PegawaiDetailProperty extends PegawaiProperty {
+export interface PegawaiDetailProperty extends PegawaiInputProperty {
+  pkid: number;
   jabatan: JabatanProperty;
   unit_kerja: UnitKerjaProperty;
   tempat_tugas: TempatTugasProperty;
