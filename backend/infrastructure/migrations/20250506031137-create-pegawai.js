@@ -23,7 +23,7 @@ module.exports = {
       },
       foto: {
         type: DataTypes.STRING,
-        allowNull: null,
+        allowNull: true,
       },
       nama_lengkap: {
         type: DataTypes.STRING,
