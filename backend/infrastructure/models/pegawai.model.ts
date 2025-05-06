@@ -11,6 +11,7 @@ export interface PegawaiAttributes {
   eselon: string;
   no_hp: string;
   npwp: string;
+  jenis_kelamin: string;
   agama: string;
   jabatan_pkid: number;
   unit_kerja_pkid: number;
@@ -28,6 +29,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
     eselon!: string;
     no_hp!: string;
     npwp!: string;
+    jenis_kelamin!: string;
     agama!: string;
     jabatan_pkid!: number;
     unit_kerja_pkid!: number;
@@ -88,6 +90,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
         allowNull: false,
       },
       npwp: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
+      jenis_kelamin: {
         type: DataTypes.STRING,
         allowNull: false,
       },

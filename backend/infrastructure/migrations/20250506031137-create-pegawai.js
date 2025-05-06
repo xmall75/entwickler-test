@@ -49,6 +49,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      jenis_kelamin: {
+        type: DataTypes.STRING,
+        allowNull: false,
+      },
       agama: {
         type: DataTypes.STRING,
         allowNull: false,
