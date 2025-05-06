@@ -1,11 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { axiosService } from '@/utils/axiosService';
 
 export const useGetAllJabatan = () => {
-  return useMutation({
-    mutationKey: ['getAllJabatan'],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ['getAllJabatan'],
+    queryFn: async () => {
       const response = await axiosService().get('api/jabatan');
       return response.data;
     },

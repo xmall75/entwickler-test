@@ -1,11 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { axiosService } from '@/utils/axiosService';
 
 export const useGetAllUnitKerja = () => {
-  return useMutation({
-    mutationKey: ['getAllUnitKerja'],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ['getAllUnitKerja'],
+    queryFn: async () => {
       const response = await axiosService().get('api/unit-kerja');
       return response.data;
     },

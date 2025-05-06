@@ -1,11 +1,11 @@
-import { useMutation } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 
 import { axiosService } from '@/utils/axiosService';
 
 export const useGetTempatTugasByPkid = (pkid: number) => {
-  return useMutation({
-    mutationKey: ['getTempatTugasByPkid'],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ['getTempatTugasByPkid'],
+    queryFn: async () => {
       const response = await axiosService().get(`api/tempat-tugas/${pkid}`);
       return response.data;
     },
