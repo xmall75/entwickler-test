@@ -6,6 +6,7 @@ import {
   UpdateOptions,
   WhereOptions,
   FindOptions,
+  Transaction,
 } from 'sequelize';
 import { getMessage } from '../../helpers/messages/messagesUtil';
 import { MessagesKey } from '../../helpers/messages/messagesKey';
@@ -19,33 +20,49 @@ export abstract class BaseRepository<T extends Model> {
   }
 
   //region Extract User Information
-  private extractCreationInfo(req: Request) {
-    const user = req.headers['authorization'] ?? 'admin';
-    const host = req.ip ?? 'localhost';
-    const currentTime = new Date();
-    return {
-      created_by: user,
-      created_date: currentTime,
-      created_host: host,
-    };
+  protected extractGetInfo(
+    req: Request,
+    isExclusiveWithPkid: boolean,
+    pkid?: number,
+  ): WhereOptions<T['_attributes']> {
+    let resultData = {};
+
+    if (req.headers) {
+      const { role_pkid: roleHeader } = req.headers;
+
+      const role_pkid = parseInt(roleHeader as string) ?? 0;
+
+      if (role_pkid === 1) resultData = { ...resultData };
+      else
+        resultData = {
+          ...resultData,
+        };
+    }
+    if (isExclusiveWithPkid) resultData = { ...resultData, pkid: pkid };
+
+    return resultData;
   }
 
-  private extractUpdateInfo(req: Request) {
-    const user = req.headers['authorization'] ?? 'admin';
+  protected extractUpdateInfo(req: Request) {
+    const user = (req.headers['user_username'] as string) ?? 'admin';
+    const tenant_id = parseInt(req.headers['tenant_id'] as string) ?? 0;
     const host = req.ip ?? 'localhost';
     const currentTime = new Date();
     return {
+      tenant_id: tenant_id,
       updated_by: user,
       updated_date: currentTime,
       updated_host: host,
     };
   }
 
-  private extractDeletionInfo(req: Request) {
-    const user = req.headers['authorization'] ?? 'admin';
+  protected extractDeletionInfo(req: Request) {
+    const user = (req.headers['user_username'] as string) ?? 'admin';
+    const tenant_id = parseInt(req.headers['tenant_id'] as string) ?? 0;
     const host = req.ip ?? 'localhost';
     const currentTime = new Date();
     return {
+      tenant_id: tenant_id,
       deleted_by: user,
       deleted_date: currentTime,
       deleted_host: host,
@@ -55,12 +72,11 @@ export abstract class BaseRepository<T extends Model> {
   //endregion
 
   //region Find methods
-  /**
-   * Find all instances of the model.
-   */
   async findAll(req: Request): Promise<T[]> {
     try {
-      return await this.model.findAll();
+      const res = await this.model.findAll();
+
+      return res;
     } catch (error) {
       if (error instanceof Error) {
         throw new Error(
@@ -71,11 +87,6 @@ export abstract class BaseRepository<T extends Model> {
     }
   }
 
-  /**
-   * Find an instance by its primary key ID.
-   * @param req
-   * @param pkid Primary key ID of the instance.
-   */
   async findByID(req: Request, pkid: number): Promise<T | null> {
     try {
       return await this.model.findByPk(pkid);
@@ -89,12 +100,6 @@ export abstract class BaseRepository<T extends Model> {
     }
   }
 
-  /**
-   * Find instances that match the given criteria, with optional ordering and limiting.
-   * @param req The request object.
-   * @param criteria The criteria to filter instances.
-   * @param options Optional parameters for ordering and limiting the results.
-   */
   async where(
     req: Request,
     criteria: WhereOptions<T['_attributes']>,
@@ -102,7 +107,9 @@ export abstract class BaseRepository<T extends Model> {
   ): Promise<T[]> {
     try {
       return await this.model.findAll({
-        where: criteria,
+        where: {
+          ...criteria,
+        },
         ...options,
       });
     } catch (error) {
@@ -115,11 +122,6 @@ export abstract class BaseRepository<T extends Model> {
     }
   }
 
-  /**
-   * Check if an instance exists that matches the given criteria.
-   * @param req
-   * @param criteria
-   */
   async whereExisting(
     req: Request,
     criteria: Partial<T['_attributes']>,
@@ -143,43 +145,40 @@ export abstract class BaseRepository<T extends Model> {
   //endregion
 
   //region Create methods
-  /**
-   * Creates a new instance of the model.
-   * @param req The request object to extract user and host information.
-   * @param entity The data to be created.
-   * @returns The created instance or an error message.
-   */
   async create(
     req: Request,
     entity: CreationAttributes<T>,
   ): Promise<T | string> {
-    const creationInfo = this.extractCreationInfo(req);
     try {
       return await this.model.create({
         ...entity,
-        ...creationInfo,
       });
     } catch (error) {
       return getMessage(req, MessagesKey.ERRORCREATE);
     }
   }
 
-  /**
-   * Bulk creates instances of the model.
-   * @param req The request object to extract user and host information.
-   * @param entities An array of data to be created.
-   * @returns The created instances or an error message.
-   */
+  async createWithTransaction(
+    req: Request,
+    entity: CreationAttributes<T>,
+    transaction: Transaction,
+  ): Promise<T> {
+    return await this.model.create(
+      {
+        ...entity,
+      },
+      { transaction },
+    );
+  }
+
   async bulkCreate(
     req: Request,
     entities: CreationAttributes<T>[],
   ): Promise<T[] | string> {
-    const creationInfo = this.extractCreationInfo(req);
     try {
       return await this.model.bulkCreate(
         entities.map((entity) => ({
           ...entity,
-          ...creationInfo,
         })),
         { validate: true },
       );
@@ -187,15 +186,22 @@ export abstract class BaseRepository<T extends Model> {
       return getMessage(req, MessagesKey.ERRORBULKCREATE);
     }
   }
+
+  async bulkCreateWithTransaction(
+    req: Request,
+    entities: CreationAttributes<T>[],
+    transaction: Transaction,
+  ): Promise<T[]> {
+    return await this.model.bulkCreate(
+      entities.map((entity) => ({
+        ...entity,
+      })),
+      { validate: true, transaction },
+    );
+  }
   //endregion
 
   //region Update methods
-  /**
-   * Updates an instance by its primary key ID.
-   * @param req
-   * @param pkid
-   * @param entity
-   */
   async update(
     req: Request,
     pkid: number,
@@ -217,11 +223,6 @@ export abstract class BaseRepository<T extends Model> {
     return [affectedCount, updatedModels];
   }
 
-  /**
-   * Bulk updates instances by their primary key IDs.
-   * @param req
-   * @param entities
-   */
   async bulkUpdate(
     req: Request,
     entities: { pkid: number; values: Partial<T['_attributes']> }[],
@@ -251,12 +252,7 @@ export abstract class BaseRepository<T extends Model> {
   }
   //endregion
 
-  // region Delete and Restore methods
-  /**
-   * Softly deletes an instance by its primary key ID.
-   * @param req
-   * @param pkid
-   */
+  //region Delete and Restore methods
   async softDelete(req: Request, pkid: number): Promise<void> {
     const deletionInfo = this.extractDeletionInfo(req);
     try {
@@ -274,11 +270,6 @@ export abstract class BaseRepository<T extends Model> {
     }
   }
 
-  /**
-   * Hard deletes an instance by its primary key ID.
-   * @param req
-   * @param pkid
-   */
   async hardDelete(req: Request, pkid: number): Promise<void> {
     try {
       const whereOptions = { pkid } as unknown as WhereOptions<
@@ -298,11 +289,6 @@ export abstract class BaseRepository<T extends Model> {
     }
   }
 
-  /**
-   * Restores a previously deleted instance by its primary key ID.
-   * @param req
-   * @param pkid Primary key ID of the instance.
-   */
   async restore(req: Request, pkid: number): Promise<void> {
     try {
       await this.model.update(
@@ -313,12 +299,12 @@ export abstract class BaseRepository<T extends Model> {
           deleted_host: null,
         },
         {
-          where: { pkid: pkid as any } as WhereOptions<T['_attributes']>, // Adjusting typing
+          where: { pkid: pkid as any } as WhereOptions<T['_attributes']>,
           paranoid: false,
         },
       );
       await this.model.restore({
-        where: { pkid: pkid as any } as WhereOptions<T['_attributes']>, // Adjusting typing
+        where: { pkid: pkid as any } as WhereOptions<T['_attributes']>,
       });
     } catch (error) {
       if (error instanceof Error) {

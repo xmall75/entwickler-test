@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import db from '../infrastructure/models';
+import pegawaiRouter from './routers/pegawai.router';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ db.sequelize
   .catch((err: object) => console.log('Error syncing tables: ', err));
 
 // Define routes
-app.use('/api/...', someRouter);
+app.use('/api/pegawai', pegawaiRouter);
 
 // Set the port
 const PORT = process.env.PORT;

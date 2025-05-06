@@ -6,6 +6,7 @@ export interface PegawaiInputDTO {
   tempat_lahir: string;
   tanggal_lahir: Date;
   alamat: string;
+  golongan: string;
   eselon: string;
   no_hp: string;
   npwp: string;
