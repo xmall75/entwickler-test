@@ -2,6 +2,7 @@ import { PegawaiAttributes } from '../../infrastructure/models/pegawai.model';
 
 export interface PegawaiInputDTO {
   nip: string;
+  foto: string | null;
   nama_lengkap: string;
   tempat_lahir: string;
   tanggal_lahir: Date;

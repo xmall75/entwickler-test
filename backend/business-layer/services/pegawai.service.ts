@@ -73,6 +73,7 @@ export class PegawaiService extends BaseService<Model<PegawaiAttributes>> {
     const dto: PegawaiAttributes = {
       pkid: 0,
       nip: vm.pegawaiData.nip,
+      foto: vm.pegawaiData.foto,
       nama_lengkap: vm.pegawaiData.nama_lengkap,
       tempat_lahir: vm.pegawaiData.tempat_lahir,
       tanggal_lahir: vm.pegawaiData.tanggal_lahir,

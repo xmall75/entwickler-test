@@ -4,6 +4,7 @@ import { BaseEntity } from '../interfaces/baseEntity.model';
 export interface PegawaiAttributes {
   pkid: number;
   nip: string;
+  foto: string | null;
   nama_lengkap: string;
   tempat_lahir: string;
   tanggal_lahir: Date;
@@ -23,6 +24,7 @@ module.exports = (sequelize: any, DataTypes: any) => {
   class Pegawai extends BaseEntity implements PegawaiAttributes {
     pkid!: number;
     nip!: string;
+    foto!: string;
     nama_lengkap!: string;
     tempat_lahir!: string;
     tanggal_lahir!: Date;
@@ -66,6 +68,10 @@ module.exports = (sequelize: any, DataTypes: any) => {
       nip: {
         type: DataTypes.STRING,
         allowNull: false,
+      },
+      foto: {
+        type: DataTypes.STRING,
+        allowNull: true,
       },
       nama_lengkap: {
         type: DataTypes.STRING,

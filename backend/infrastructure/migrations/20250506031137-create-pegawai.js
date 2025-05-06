@@ -21,6 +21,10 @@ module.exports = {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      foto: {
+        type: DataTypes.STRING,
+        allowNull: null,
+      },
       nama_lengkap: {
         type: DataTypes.STRING,
         allowNull: false,
