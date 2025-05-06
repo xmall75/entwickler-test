@@ -17,12 +17,8 @@ module.exports = {
         autoIncrement: true,
         primaryKey: true,
       },
-      nama_jabatan: {
+      nama_unit: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
-      gaji_pokok: {
-        type: DataTypes.INTEGER,
         allowNull: false,
       },
     });
