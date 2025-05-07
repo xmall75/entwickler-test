@@ -26,3 +26,21 @@ export interface PegawaiDetailProperty extends PegawaiInputProperty {
   unit_kerja: UnitKerjaProperty;
   tempat_tugas: TempatTugasProperty;
 }
+
+export const pegawaiInitialValues: PegawaiInputProperty = {
+  nip: '',
+  foto: null,
+  nama_lengkap: '',
+  tempat_lahir: '',
+  tanggal_lahir: new Date(),
+  alamat: '',
+  golongan: '',
+  eselon: '',
+  no_hp: '',
+  npwp: '',
+  jenis_kelamin: '',
+  agama: '',
+  jabatan_pkid: 0,
+  unit_kerja_pkid: 0,
+  tempat_tugas_pkid: 0,
+};
