@@ -1,6 +1,14 @@
 'use client';
 
-import { Button, notification, Popconfirm, Space, Table } from 'antd';
+import {
+  Button,
+  Flex,
+  Input,
+  notification,
+  Popconfirm,
+  Space,
+  Table,
+} from 'antd';
 import type { TableProps } from 'antd';
 import { PegawaiDetailProperty } from '@/types/pegawai';
 import { useGetAllPegawai } from '@/hooks/api/pegawai/useGetAllPegawai';
@@ -12,18 +20,30 @@ import { TempatTugasProperty } from '@/types/tempat_tugas';
 import { useGetAllUnitKerja } from '@/hooks/api/unit_kerja/useGetAllUnitKerja';
 import { UnitKerjaProperty } from '@/types/unit_kerja';
 import { useDeletePegawai } from '@/hooks/api/pegawai/useDeletePegawai';
+import { useEffect, useState } from 'react';
+import PegawaiModal from '../modals/PegawaiModal';
 
 interface DataType extends PegawaiDetailProperty {
   key: string;
 }
 
 const PegawaiTable = () => {
+  const [openModal, setOpenModal] = useState(false);
+  const [mode, setMode] = useState<'view' | 'create' | 'edit'>('view');
+  const [chosenData, setChosenData] = useState<PegawaiDetailProperty | null>(
+    null,
+  );
+
+  const [search, setSearch] = useState('');
+
   const { data: pegawaiData, refetch } = useGetAllPegawai();
   const { data: jabatanData } = useGetAllJabatan();
   const { data: tempatTugasData } = useGetAllTempatTugas();
   const { data: unitKerjaData } = useGetAllUnitKerja();
 
   const { mutateAsync: deletePegawai } = useDeletePegawai();
+
+  const [initialData, setInitialData] = useState<DataType[]>([]);
 
   const [api, contextHolder] = notification.useNotification();
 
@@ -35,6 +55,27 @@ const PegawaiTable = () => {
       placement: 'bottomRight',
     });
   };
+
+  useEffect(() => {
+    if (pegawaiData) {
+      const searched = pegawaiData.data.filter(
+        (pegawai: PegawaiDetailProperty) =>
+          String(pegawai.nama_lengkap)
+            .toLowerCase()
+            .includes(search.toLowerCase()) ||
+          String(pegawai.nip).toLowerCase().includes(search.toLowerCase()) ||
+          String(pegawai.npwp).toLowerCase().includes(search.toLowerCase()) ||
+          String(pegawai.no_hp).toLowerCase().includes(search.toLowerCase()),
+      );
+
+      const newData = searched?.map((pegawai: PegawaiDetailProperty) => ({
+        ...pegawai,
+        key: pegawai.pkid.toString(),
+      }));
+
+      setInitialData(newData);
+    }
+  }, [search, pegawaiData]);
 
   const jabatanFilters =
     jabatanData?.data.map((jabatan: JabatanProperty) => ({
@@ -54,12 +95,20 @@ const PegawaiTable = () => {
       value: unitKerja.nama_unit,
     })) || [];
 
-  const handleView = (pkid: number, data: PegawaiDetailProperty) => {
-    return pkid;
+  const handleToggleModal = () => {
+    setOpenModal(!openModal);
   };
 
-  const handleEdit = (pkid: number, data: PegawaiDetailProperty) => {
-    return pkid;
+  const handleView = (data: PegawaiDetailProperty) => {
+    setMode('view');
+    setChosenData(data);
+    handleToggleModal();
+  };
+
+  const handleEdit = (data: PegawaiDetailProperty) => {
+    setMode('edit');
+    setChosenData(data);
+    handleToggleModal();
   };
 
   const handleDelete = async (pkid: number) => {
@@ -162,14 +211,14 @@ const PegawaiTable = () => {
         return (
           <Space size='middle'>
             <Button
-              onClick={() => handleView(record.pkid, record)}
+              onClick={() => handleView(record)}
               color='green'
               variant='outlined'
             >
               <FaEye />
             </Button>
             <Button
-              onClick={() => handleEdit(record.pkid, record)}
+              onClick={() => handleEdit(record)}
               color='blue'
               variant='outlined'
             >
@@ -192,17 +241,38 @@ const PegawaiTable = () => {
     },
   ];
 
-  const data = pegawaiData?.data.map((pegawai: PegawaiDetailProperty) => ({
-    ...pegawai,
-    key: pegawai.pkid.toString(),
-  }));
-
   return (
     <>
       {contextHolder}
+      <Flex justify='space-between' align='center' style={{ marginBottom: 16 }}>
+        <Input
+          placeholder='Cari pegawai'
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          style={{ width: 300 }}
+        />
+        <Button
+          color='blue'
+          variant='solid'
+          onClick={() => {
+            setMode('create');
+            setChosenData(null);
+            handleToggleModal();
+          }}
+        >
+          Tambah Pegawai
+        </Button>
+      </Flex>
+      <PegawaiModal
+        key={`${chosenData?.pkid} ${mode}`}
+        mode={mode}
+        openModal={openModal}
+        data={chosenData}
+        handleToggleModal={handleToggleModal}
+      />
       <Table<DataType>
         columns={columns}
-        dataSource={data}
+        dataSource={initialData}
         scroll={{ x: 'max-content' }}
       />
     </>
