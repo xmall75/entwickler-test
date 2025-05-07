@@ -2,11 +2,13 @@ import { useMutation } from '@tanstack/react-query';
 
 import { axiosService } from '@/utils/axiosService';
 
-export const useDeletePegawai = (pkid: number) => {
+export const useDeletePegawai = () => {
   return useMutation({
     mutationKey: ['deletePegawai'],
-    mutationFn: async () => {
-      const response = await axiosService().delete(`api/pegawai/${pkid}`);
+    mutationFn: async (pkid: number) => {
+      const response = await axiosService().delete(
+        `api/pegawai/delete/${pkid}`,
+      );
       return response.data;
     },
   });

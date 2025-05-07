@@ -1,6 +1,6 @@
 'use client';
 
-import { Button, Space, Table } from 'antd';
+import { Button, notification, Popconfirm, Space, Table } from 'antd';
 import type { TableProps } from 'antd';
 import { PegawaiDetailProperty } from '@/types/pegawai';
 import { useGetAllPegawai } from '@/hooks/api/pegawai/useGetAllPegawai';
@@ -11,16 +11,30 @@ import { useGetAllTempatTugas } from '@/hooks/api/tempat_tugas/useGetAllTempatTu
 import { TempatTugasProperty } from '@/types/tempat_tugas';
 import { useGetAllUnitKerja } from '@/hooks/api/unit_kerja/useGetAllUnitKerja';
 import { UnitKerjaProperty } from '@/types/unit_kerja';
+import { useDeletePegawai } from '@/hooks/api/pegawai/useDeletePegawai';
 
 interface DataType extends PegawaiDetailProperty {
   key: string;
 }
 
 const PegawaiTable = () => {
-  const { data: pegawaiData } = useGetAllPegawai();
+  const { data: pegawaiData, refetch } = useGetAllPegawai();
   const { data: jabatanData } = useGetAllJabatan();
   const { data: tempatTugasData } = useGetAllTempatTugas();
   const { data: unitKerjaData } = useGetAllUnitKerja();
+
+  const { mutateAsync: deletePegawai } = useDeletePegawai();
+
+  const [api, contextHolder] = notification.useNotification();
+
+  const successNotification = () => {
+    api['success']({
+      message: 'Berhasil menghapus data',
+      description:
+        'Data telah berhasil dihapus. Silahkan cek kembali data pegawai.',
+      placement: 'bottomRight',
+    });
+  };
 
   const jabatanFilters =
     jabatanData?.data.map((jabatan: JabatanProperty) => ({
@@ -40,15 +54,23 @@ const PegawaiTable = () => {
       value: unitKerja.nama_unit,
     })) || [];
 
-  const handleView = (pkid: number) => {
+  const handleView = (pkid: number, data: PegawaiDetailProperty) => {
     return pkid;
   };
 
-  const handleEdit = (pkid: number) => {
+  const handleEdit = (pkid: number, data: PegawaiDetailProperty) => {
     return pkid;
   };
 
-  const handleDelete = (pkid: number) => {};
+  const handleDelete = async (pkid: number) => {
+    try {
+      await deletePegawai(pkid);
+      successNotification();
+      refetch();
+    } catch (error) {
+      console.error('Error deleting pegawai:', error);
+    }
+  };
 
   const columns: TableProps<DataType>['columns'] = [
     {
@@ -56,7 +78,7 @@ const PegawaiTable = () => {
       dataIndex: 'nip',
       key: 'nip',
       fixed: 'left',
-      render: text => <a>{text}</a>,
+      render: text => <span className='font-bold'>{text}</span>,
     },
     {
       title: 'Nama Lengkap',
@@ -140,26 +162,30 @@ const PegawaiTable = () => {
         return (
           <Space size='middle'>
             <Button
-              onClick={() => handleView(record.pkid)}
+              onClick={() => handleView(record.pkid, record)}
               color='green'
               variant='outlined'
             >
               <FaEye />
             </Button>
             <Button
-              onClick={() => handleEdit(record.pkid)}
+              onClick={() => handleEdit(record.pkid, record)}
               color='blue'
               variant='outlined'
             >
               <FaPencil />
             </Button>
-            <Button
-              onClick={() => handleDelete(record.pkid)}
-              color='danger'
-              variant='outlined'
+            <Popconfirm
+              title='Hapus data'
+              description='Apakah anda yakin ingin menghapus data ini?'
+              onConfirm={() => handleDelete(record.pkid)}
+              okText='Yes'
+              cancelText='No'
             >
-              <FaTrashCan />
-            </Button>
+              <Button color='danger' variant='outlined'>
+                <FaTrashCan />
+              </Button>
+            </Popconfirm>
           </Space>
         );
       },
@@ -172,11 +198,14 @@ const PegawaiTable = () => {
   }));
 
   return (
-    <Table<DataType>
-      columns={columns}
-      dataSource={data}
-      scroll={{ x: 'max-content' }}
-    />
+    <>
+      {contextHolder}
+      <Table<DataType>
+        columns={columns}
+        dataSource={data}
+        scroll={{ x: 'max-content' }}
+      />
+    </>
   );
 };
 
