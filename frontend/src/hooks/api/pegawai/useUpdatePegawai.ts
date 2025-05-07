@@ -13,7 +13,10 @@ export const useUpdatePegawai = () => {
       pkid: number;
       data: Partial<PegawaiInputProperty>;
     }) => {
-      const response = await axiosService().put(`api/pegawai/${pkid}`, data);
+      const response = await axiosService().put(`api/pegawai/${pkid}`, {
+        ...data,
+        foto: data?.foto?.[0].name,
+      });
       return response.data;
     },
   });

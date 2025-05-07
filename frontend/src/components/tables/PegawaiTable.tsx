@@ -47,11 +47,10 @@ const PegawaiTable = () => {
 
   const [api, contextHolder] = notification.useNotification();
 
-  const successNotification = () => {
+  const successNotification = (message: string, description: string) => {
     api['success']({
-      message: 'Berhasil menghapus data',
-      description:
-        'Data telah berhasil dihapus. Silahkan cek kembali data pegawai.',
+      message: message,
+      description: description,
       placement: 'bottomRight',
     });
   };
@@ -96,6 +95,7 @@ const PegawaiTable = () => {
     })) || [];
 
   const handleToggleModal = () => {
+    refetch();
     setOpenModal(!openModal);
   };
 
@@ -114,7 +114,10 @@ const PegawaiTable = () => {
   const handleDelete = async (pkid: number) => {
     try {
       await deletePegawai(pkid);
-      successNotification();
+      successNotification(
+        'Data berhasil dihapus',
+        'Berhasil menghapus data. Silahkan cek tabel kembali.',
+      );
       refetch();
     } catch (error) {
       console.error('Error deleting pegawai:', error);
@@ -268,6 +271,7 @@ const PegawaiTable = () => {
         mode={mode}
         openModal={openModal}
         data={chosenData}
+        successNotification={successNotification}
         handleToggleModal={handleToggleModal}
       />
       <Table<DataType>

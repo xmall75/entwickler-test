@@ -4,7 +4,7 @@ import { UnitKerjaProperty } from './unit_kerja';
 
 export interface PegawaiInputProperty {
   nip: string;
-  foto: string | null;
+  foto: FileList | null;
   nama_lengkap: string;
   tempat_lahir: string;
   tanggal_lahir: Date;
