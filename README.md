@@ -21,3 +21,4 @@ The frontend is developed using [Next.js](https://nextjs.org/) 15 with [TypeScri
 For more details about **how to run** and more, check out the [README.md from frontend directory](https://github.com/xmall75/entwickler-test/tree/main/frontend#readme).
 
 ## Logic
+All problems are solved using JavaScript. The scripts can be run by attaching it into HTML code or simply `node scripts.js` if you have Node installed.
