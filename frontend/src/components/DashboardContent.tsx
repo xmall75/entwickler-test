@@ -1,12 +1,14 @@
 'use client';
 
+import '@ant-design/v5-patch-for-react-19';
 import { Tabs } from 'antd';
+import PegawaiTable from './tables/PegawaiTable';
 
 const SidebarContent = [
   {
     label: 'Pegawai',
     key: 'pegawai',
-    children: 'Content of Pegawai',
+    children: <PegawaiTable />,
   },
   {
     label: 'Jabatan',
