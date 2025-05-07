@@ -17,6 +17,7 @@ import {
   Typography,
   Upload,
 } from 'antd';
+import Image from 'next/image';
 import dayjs from 'dayjs';
 import { TiUploadOutline } from 'react-icons/ti';
 
@@ -59,7 +60,7 @@ const PegawaiModal = ({
         name='pegawai-form'
         layout='vertical'
         onFinish={onFinish}
-        initialValues={pegawaiInitialValues}
+        initialValues={data ? data : pegawaiInitialValues}
         autoComplete='off'
       >
         <Title level={3}>
@@ -103,26 +104,20 @@ const PegawaiModal = ({
             <Form.Item<PegawaiInputProperty>
               name='nip'
               style={{ width: '100%' }}
-              initialValue={data?.nip}
               rules={[{ required: true, message: 'Tolong isi NIP anda' }]}
             >
-              <Input id='nip' disabled={isInputDisabled} value={data?.nip} />
+              <Input id='nip' disabled={isInputDisabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
             <Form.Item<PegawaiInputProperty>
               name='nama_lengkap'
               style={{ width: '100%' }}
-              initialValue={data?.nama_lengkap}
               rules={[
                 { required: true, message: 'Tolong isi nama lengkap anda' },
               ]}
             >
-              <Input
-                id='nama_lengkap'
-                disabled={isInputDisabled}
-                value={data?.nama_lengkap}
-              />
+              <Input id='nama_lengkap' disabled={isInputDisabled} />
             </Form.Item>
           </Col>
         </Row>
@@ -160,16 +155,11 @@ const PegawaiModal = ({
             <Form.Item<PegawaiInputProperty>
               name='tempat_lahir'
               style={{ width: '100%' }}
-              initialValue={data?.tempat_lahir}
               rules={[
                 { required: true, message: 'Tolong isi tempat lahir anda' },
               ]}
             >
-              <Input
-                id='tempat_lahir'
-                disabled={isInputDisabled}
-                value={data?.nip}
-              />
+              <Input id='tempat_lahir' disabled={isInputDisabled} />
             </Form.Item>
           </Col>
           <Col span={12}>
@@ -181,7 +171,11 @@ const PegawaiModal = ({
                 { required: true, message: 'Tolong isi tanggal lahir anda' },
               ]}
             >
-              <DatePicker id='tanggal_lahir' style={{ width: '100%' }} />
+              <DatePicker
+                id='tanggal_lahir'
+                disabled={isInputDisabled}
+                style={{ width: '100%' }}
+              />
             </Form.Item>
           </Col>
         </Row>
@@ -216,30 +210,39 @@ const PegawaiModal = ({
         </Row>
         <Row align='middle' justify='space-between'>
           <Col span={11}>
-            <Form.Item<PegawaiInputProperty>
-              name='foto'
-              style={{ width: '100%' }}
-              valuePropName='fileList'
-              getValueFromEvent={normFile}
-            >
-              <Upload
-                id='foto'
+            {data?.foto ? (
+              <Image
+                width={40}
+                height={40}
+                src={data?.foto}
+                alt='Foto Pegawai'
+              />
+            ) : (
+              <Form.Item<PegawaiInputProperty>
+                name='foto'
                 style={{ width: '100%' }}
-                action='/api/upload'
-                listType='picture'
+                valuePropName='fileList'
+                getValueFromEvent={normFile}
               >
-                <Button icon={<TiUploadOutline />}>Click to upload</Button>
-              </Upload>
-            </Form.Item>
+                <Upload
+                  id='foto'
+                  style={{ width: '100%' }}
+                  action='/api/upload'
+                  listType='picture'
+                  disabled={isInputDisabled}
+                >
+                  <Button icon={<TiUploadOutline />}>Click to upload</Button>
+                </Upload>
+              </Form.Item>
+            )}
           </Col>
           <Col span={12}>
             <Form.Item<PegawaiInputProperty>
               name='alamat'
               style={{ width: '100%' }}
-              initialValue={data?.alamat}
               rules={[{ required: true, message: 'Tolong isi alamat anda' }]}
             >
-              <Input id='alamat' disabled={isInputDisabled} value={data?.nip} />
+              <Input id='alamat' disabled={isInputDisabled} />
             </Form.Item>
           </Col>
         </Row>
